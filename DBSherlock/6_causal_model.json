@@ -1,0 +1,19 @@
+{
+    "cause": 6,
+    "predicates_dic": {
+        "104": {
+            "attribute": 104,
+            "operand1": 65018245774.352,
+            "operator1": "<",
+            "operand2": null,
+            "operator2": null
+        },
+        "14": {
+            "attribute": 14,
+            "operand1": 1189583306.752,
+            "operator1": "<",
+            "operand2": null,
+            "operator2": null
+        }
+    }
+}
