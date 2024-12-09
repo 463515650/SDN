@@ -21,7 +21,7 @@ SDN is implemented in Python 3.10 with PyTorch 2.0.1. All experiments are run on
 
  * Installing dependencies
 
-   `$ pip install -r requirements`
+   `$ pip install -r requirements.txt`
 
  * Preprocess and constructure the training data
 
