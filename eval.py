@@ -42,7 +42,7 @@ def train(model, train_x, train_y, batch_size, num_epochs, device):
     for epoch in range(num_epochs):
         accu_loss = 0
         iteration = 0
-        for graph_batch11, graph_batch12, graph_batch21, graph_batch22, graph_batch31, graph_batch32 in train_loader:
+        for graph_batch11, graph_batch12, graph_batch13, graph_batch14, graph_batch21, graph_batch22, graph_batch23, graph_batch24, graph_batch31, graph_batch32, graph_batch33, graph_batch34 in train_loader:
             # graph1 = torch.tensor(graph1)
             # graph2 = torch.tensor(graph2)
             # print(graph1.x)
@@ -52,9 +52,9 @@ def train(model, train_x, train_y, batch_size, num_epochs, device):
             optimizer.zero_grad()
             # print(batch1.x)
             # out, intermediate_output = model(data)
-            out1 = model(graph_batch11, graph_batch12)
-            out2 = model(graph_batch21, graph_batch22)
-            out3 = model(graph_batch31, graph_batch32)
+            out1 = model(graph_batch11, graph_batch12, graph_batch13, graph_batch14)
+            out2 = model(graph_batch21, graph_batch22, graph_batch23, graph_batch24)
+            out3 = model(graph_batch31, graph_batch32, graph_batch33, graph_batch34)
             loss = criterion(out1, out2, out3)
             loss.backward()
             optimizer.step()

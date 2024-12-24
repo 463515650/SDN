@@ -27,7 +27,7 @@ class SiameseDataset(Dataset):
         # graph_pair1 = torch.tensor(graph_pair1)
         # graph_pair2 = torch.tensor(graph_pair2)
 
-        return graph_pair1[0], graph_pair1[1], positive[0], positive[1], negative[0], negative[1]
+        return graph_pair1[0], graph_pair1[1], graph_pair1[2], graph_pair1[3], positive[0], positive[1], positive[2], positive[3], negative[0], negative[1], negative[2], negative[3]
 
 
 def load_pair_graph_dataset(path, device):
@@ -37,7 +37,12 @@ def load_pair_graph_dataset(path, device):
         graph_pairs.append((Data(x=torch.tensor(x[i][0][0], dtype=torch.float).to(device),
                                  edge_index=torch.tensor(x[i][0][1], dtype=torch.long)).to(device),
                             Data(x=torch.tensor(x[i][1][0], dtype=torch.float).to(device),
-                                 edge_index=torch.tensor(x[i][1][1], dtype=torch.long).to(device))))
+                                 edge_index=torch.tensor(x[i][1][1], dtype=torch.long).to(device)),
+                            Data(x=None,
+                                 edge_index=torch.tensor(x[i][0][2], dtype=torch.long).to(device)),
+                            Data(x=None,
+                                 edge_index=torch.tensor(x[i][1][2], dtype=torch.long).to(device))
+                            ))
     # y = torch.tensor(y, dtype=torch.long).to(device)
     return graph_pairs, y
 

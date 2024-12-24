@@ -43,7 +43,9 @@ kpi_to_group = {}
 
 for group,kpis in group_to_kpi.items():
     for kpi in kpis:
-        kpi_to_group[kpi] = group
+        if kpi >= 98:
+            kpi = kpi - 13
+        kpi_to_group[kpi - 1] = group - 1
 
 def fisher_z_test(r, n):
 
@@ -110,7 +112,7 @@ def do_linear_regression(series, scale):
     return ret
 
 
-def get_correlation_graph(data, normalized_data, with_trend=False, scales=[3,5,7]):
+def get_correlation_graph(data, normalized_data, with_trend=True, scales=[3,5,7]):
     cor, test_result = correlation_graph(data)
     x = normalized_data[:, np.array(kpi_list) - 1].transpose().tolist()
     if with_trend:
@@ -130,7 +132,7 @@ def get_correlation_graph(data, normalized_data, with_trend=False, scales=[3,5,7
             edge_index[1].append(key[1])
             edge_index[0].append(key[1])
             edge_index[1].append(key[0])
-    return x, edge_index
+    return x, edge_index, get_group_correlation_edges(edge_index)
 
 def get_group_correlation_edges(kpi_edges):
     group_edges = [[],[]]
@@ -140,7 +142,7 @@ def get_group_correlation_edges(kpi_edges):
     for i in range(len(v1)):
         p = v1[i]
         q = v2[i]
-        group_edges_set.add(kpi_to_group[p], kpi_to_group[q])
+        group_edges_set.add((kpi_to_group[p], kpi_to_group[q]))
 
     for edge in group_edges_set:
         group_edges[0].append(edge[0])
@@ -351,12 +353,12 @@ def generate_test_interpret_dataset(sample_pairs):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Generate samples.')
-    parser.add_argument('k', type=int, default=5,
+    parser.add_argument('-k', type=int, default=5,
                         help='the number of selected normal samples, eg 5')
-    parser.add_argument('test_ratio', type=float, default=0.5,
+    parser.add_argument('-test_ratio', type=float, default=0.5,
                         help='the ratio of test samples, eg 0.5')
 
-    parser.add_argument('sample_strategy', type=str, default='clustered',
+    parser.add_argument('-sample_strategy', type=str, default='clustered',
                         help='sampling strategy, eg random, clustered')
 
     args = parser.parse_args()
@@ -374,9 +376,6 @@ if __name__ == '__main__':
 
     for path in datasets_path:
         datasets.append(pickle.load(open(path, 'rb')))
-
-    for dataset in datasets:
-        dataset.clip(10, 100)
 
     k = args.k
 
@@ -426,14 +425,14 @@ if __name__ == '__main__':
     else:
         x, y, sample_x, sample_y = generate_graph_clustered_pairs_dataset(train)
         print('the number of training samples' + str(len(y)))
-        pickle.dump((x, y, sample_x, sample_y), open('dataset/without_trend/train_10_05_dataset_1_full.pickle', 'wb'))
+        pickle.dump((x, y, sample_x, sample_y), open('dataset/preprocessed/train_10_05_dataset_1_full.pickle', 'wb'))
 
         sample_pairs, test_y = generate_test_clustered_pairs(test)
         print('the number of testing samples：' + str(len(test_y)))
-        pickle.dump((sample_pairs, test_y), open('dataset/without_trend/test_10_05_dataset_1_full.pickle', 'wb'))
+        pickle.dump((sample_pairs, test_y), open('dataset/preprocessed/test_10_05_dataset_1_full.pickle', 'wb'))
 
         replace_samples = generate_test_interpret_dataset(sample_pairs)
-        pickle.dump((replace_samples, test_y), open('dataset/without_trend/test_interpret_10_05_dataset_1_full.pickle', 'wb'))
+        pickle.dump((replace_samples, test_y), open('dataset/preprocessed/test_interpret_10_05_dataset_1_full.pickle', 'wb'))
 
 
 
